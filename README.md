@@ -1,16 +1,12 @@
-[![Tests](../../actions/workflows/tests-13-sprint.yml/badge.svg)](../../actions/workflows/tests-13-sprint.yml) [![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml)
-# Проект Mesto фронтенд + бэкенд
+# Проектная работа "Подготовка бэкэнда" (JS)
+---
+Данный проект нацелен на изучение работы сервера.
+
+В ходе работы были тщательно изучены и использованы следующие темы:
+
+* Серверная разработка на Node.js
+* Основы express.js
+* Работа с базами данных на примере Mongo DB
 
 
-## Директории
-
-`/routes` — папка с файлами роутера  
-`/controllers` — папка с файлами контроллеров пользователя и карточки   
-`/models` — папка с файлами описания схем пользователя и карточки  
-  
-Остальные директории вспомогательные, создаются при необходимости разработчиком
-
-## Запуск проекта
-
-`npm run start` — запускает сервер   
-`npm run dev` — запускает сервер с hot-reload
+Ссылка на Github: https://anna-nekrasova.github.io/express-mesto-gha/
