@@ -31,7 +31,13 @@ const deleteCardById = (req, res) => {
         res.send({ message: 'Карточка удалена' });
       }
     })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные для удаления карточки.' });
+      } else {
+        res.status(500).send({ message: err.message });
+      }
+    });
 };
 
 const likeCard = (req, res) => {

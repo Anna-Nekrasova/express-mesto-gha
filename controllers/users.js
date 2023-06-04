@@ -48,13 +48,12 @@ const editProfile = (req, res) => {
   const owner = req.user._id;
   const { name, about } = req.body;
   User.findByIdAndUpdate(owner, { name, about }, { new: true }, { runValidators: true })
-    .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
-      } else {
-        res.send({ data: user });
-      }
-    })
+    .then((user) => res.send({
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      _id: user.id,
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при редактировании профиля.' });
@@ -68,13 +67,12 @@ const editAvatar = (req, res) => {
   const owner = req.user._id;
   const { avatar } = req.body;
   User.findByIdAndUpdate(owner, { avatar }, { new: true }, { runValidators: true })
-    .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
-      } else {
-        res.send({ data: user });
-      }
-    })
+    .then((user) => res.send({
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      _id: user.id,
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при редактировании аватара.' });
