@@ -30,7 +30,7 @@ const createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'SomeErrorName') {
+      if (err.name === 'ValidationError') {
         res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя.' });
       } else {
         res.status(500).send({ message: err.message });
@@ -50,7 +50,7 @@ const editProfile = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'SomeErrorName') {
+      if (err.name === 'ValidationError') {
         res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при редактировании профиля.' });
       } else {
         res.status(500).send({ message: err.message });
@@ -70,7 +70,7 @@ const editAvatar = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'SomeErrorName') {
+      if (err.name === 'ValidationError') {
         res.status(ERROR_CODE).send({ message: 'Переданы некорректные данные при редактировании аватара.' });
       } else {
         res.status(500).send({ message: err.message });
