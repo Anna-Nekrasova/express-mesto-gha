@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { celebrate, Joi} = require('celebrate');
 
 const app = express();
 const bodyParser = require('body-parser');
@@ -7,13 +8,10 @@ const bodyParser = require('body-parser');
 const { PORT = 3000 } = process.env;
 const routerCards = require('./routes/cards');
 const routerUsers = require('./routes/users');
+const { login, createUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '6478bbc9a7b6f219d4d676d1',
-  };
-  next();
-});
+const NotFoundError = require('./errors/not-found-err');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,10 +23,36 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
     console.log('Ошибка подключения к базе', err);
   });
 
-app.use('/', routerUsers);
-app.use('/', routerCards);
-app.use((req, res) => {
-  res.status(404).send({ message: 'Запрос на несуществующий роут' });
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), login);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().required().pattern(/(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.[a-z0-9_-]{2,3}))(:\d{2,5})?((\/.+)+)?\/?#?/m),
+  }),
+}), createUser);
+
+app.use('/', auth, routerUsers);
+app.use('/', auth, routerCards);
+app.use((req, res, next) => {
+  next(new NotFoundError('Запрос на несуществующий роут.'));
+});
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+  res.status(statusCode).send({
+    message: statusCode === 500
+      ? 'На сервере произошла ошибка'
+      : message,
+  });
+  next();
 });
 
 app.listen(PORT);

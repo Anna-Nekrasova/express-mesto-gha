@@ -1,14 +1,24 @@
 const express = require('express');
+const { celebrate, Joi } = require('celebrate');
 
 const routerUsers = express.Router();
 const {
-  getUsers, getUserById, createUser, editProfile, editAvatar,
+  getUsers, getUserById, editProfile, editAvatar, getUserAuth,
 } = require('../controllers/users');
 
+routerUsers.get('/users/me', getUserAuth);
 routerUsers.get('/users', getUsers);
 routerUsers.get('/users/:userId', getUserById);
-routerUsers.post('/users', createUser);
-routerUsers.patch('/users/me', editProfile);
-routerUsers.patch('/users/me/avatar', editAvatar);
+routerUsers.patch('/users/me', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
+  }),
+}), editProfile);
+routerUsers.patch('/users/me/avatar', celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string().required().pattern(/(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.[a-z0-9_-]{2,3}))(:\d{2,5})?((\/.+)+)?\/?#?/m),
+  }),
+}), editAvatar);
 
 module.exports = routerUsers;
