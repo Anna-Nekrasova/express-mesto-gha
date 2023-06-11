@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { celebrate, Joi} = require('celebrate');
+const { celebrate, Joi } = require('celebrate');
 
 const app = express();
 const bodyParser = require('body-parser');
