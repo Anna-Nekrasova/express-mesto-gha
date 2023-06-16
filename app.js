@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { celebrate, Joi } = require('celebrate');
+const { errors } = require('celebrate');
 
 const app = express();
 const bodyParser = require('body-parser');
@@ -44,6 +45,8 @@ app.use('/', auth, routerCards);
 app.use((req, res, next) => {
   next(new NotFoundError('Запрос на несуществующий роут.'));
 });
+
+app.use(errors());
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
