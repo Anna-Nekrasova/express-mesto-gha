@@ -68,24 +68,28 @@ const getUserById = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  bcrypt.hash(req.body.password, 10)
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
+  bcrypt.hash(password, 10)
     .then((hash) => User.create({
-      name: req.body.name,
-      about: req.body.about,
-      avatar: req.body.avatar,
-      email: req.body.email,
-      password: hash,
+      name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.send({
-      name: user.name,
-      about: user.about,
-      avatar: user.avatar,
-      _id: user.id,
-    }))
+    .then((user) => {
+      if (!user) {
+        return next(new NotFoundError('Пользователь не найден'));
+      } return res.send({
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+        _id: user.id,
+      });
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
-      } else if (err.name === 'MongoServerError' && err.code === 11000) {
+      } else if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже зарегестрирован.'));
       } else {
         next(err);
