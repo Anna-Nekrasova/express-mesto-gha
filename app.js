@@ -42,7 +42,7 @@ app.post('/signup', celebrate({
 
 app.use('/', auth, routerUsers);
 app.use('/', auth, routerCards);
-app.use((req, res, next) => {
+app.use('*', (req, res, next) => {
   next(new NotFoundError('Запрос на несуществующий роут.'));
 });
 
