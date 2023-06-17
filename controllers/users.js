@@ -47,17 +47,17 @@ const login = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Неправильные почта или пароль');
       }
-      return bcrypt.compare(password, user.password);
-    })
-    .then((matched) => {
-      if (!matched) {
-        throw new NotFoundError('Неправильные почта или пароль');
-      }
-      res.send({ message: 'Всё верно!' });
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            throw new NotFoundError('Неправильные почта или пароль');
+          }
+          return user;
+        });
     })
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, SECRET_KEY, { expiresIn: '7d' });
-      res.send({ token });
+      res.status(200).send({ token });
     })
     .catch((err) => {
       next(new UnauthorizedError('Произошла ошибка'));
