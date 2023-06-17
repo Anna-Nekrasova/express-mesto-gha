@@ -4,7 +4,7 @@ const UnauthorizedError = require('../errors/unauthorized-err');
 
 const SECRET_KEY = 'some-secret-key';
 
-module.exports = (err, req, res, next) => {
+module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
