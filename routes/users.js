@@ -7,7 +7,11 @@ const {
 } = require('../controllers/users');
 
 routerUsers.get('/users/me', getUserAuth);
-routerUsers.get('/users/:userId', getUserById);
+routerUsers.get('/users/:userId', celebrate({
+  params: Joi.object().keys({
+    id: Joi.string().hex().alphanum().length(24),
+  }),
+}), getUserById);
 routerUsers.get('/users', getUsers);
 routerUsers.patch('/users/me', celebrate({
   body: Joi.object().keys({
