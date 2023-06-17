@@ -77,8 +77,8 @@ const createUser = (req, res, next) => {
     }))
     .then((user) => {
       if (!user) {
-        return next(new NotFoundError('Пользователь не найден'));
-      } return res.send({
+        throw new NotFoundError('Пользователь не найден');
+      } return res.status(200).send({
         name: user.name,
         about: user.about,
         avatar: user.avatar,
@@ -87,10 +87,10 @@ const createUser = (req, res, next) => {
       });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
-      } else if (err.code === 11000) {
+      if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже зарегестрирован.'));
+      } else if (err.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
       } else {
         next(err);
       }
