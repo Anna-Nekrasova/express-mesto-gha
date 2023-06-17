@@ -1,18 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
-
-const app = express();
-const bodyParser = require('body-parser');
-
-const { PORT = 3000 } = process.env;
 const routerCards = require('./routes/cards');
 const routerUsers = require('./routes/users');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
-
 const NotFoundError = require('./errors/not-found-err');
+
+const app = express();
+
+const { PORT = 3000 } = process.env;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
