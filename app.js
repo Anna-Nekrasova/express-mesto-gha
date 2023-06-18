@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
 const routerCards = require('./routes/cards');
 const routerUsers = require('./routes/users');
 const { login, createUser } = require('./controllers/users');
@@ -15,6 +16,7 @@ const { PORT = 3000 } = process.env;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(helmet());
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb')
   .then(() => {
